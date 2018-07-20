@@ -69,20 +69,20 @@ def lasso_dct_estimator(hparams):  #pylint: disable = W0613
 
 def lasso_wavelet_estimator(hparams):  #pylint: disable = W0613
     """LASSO with Wavelet"""
-    def estimator(A_val, y_batch_val, hparams):
+    def estimator(A_val, y_batch_val, hparams): # (e.g. of estimator: lasso_wavelet)
         x_hat_batch = []
         W = wavelet_basis()
         WA = np.dot(W, A_val)
         for j in range(hparams.batch_size):
             y_val = y_batch_val[j]
-            z_hat = utils.solve_lasso(WA, y_val, hparams)
-            x_hat = np.dot(z_hat, W)
+            z_hat = utils.solve_lasso(WA, y_val, hparams) # min l1-norm(z_hat) s.t. z_hat*w*A = y; z_hat is sparse
+            x_hat = np.dot(z_hat, W) # to compute img
             x_hat_max = np.abs(x_hat).max()
-            x_hat = x_hat / (1.0 * x_hat_max)
+            x_hat = x_hat / (1.0 * x_hat_max) # normalize
             x_hat_batch.append(x_hat)
         x_hat_batch = np.asarray(x_hat_batch)
         return x_hat_batch
-    return estimator
+    return estimator 
 
 
 def lasso_wavelet_ycbcr_estimator(hparams):  #pylint: disable = W0613

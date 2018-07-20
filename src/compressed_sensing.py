@@ -18,6 +18,10 @@ def main(hparams):
     # get inputs
     xs_dict = model_input(hparams)
 
+    # get estimator functions for each experiment type
+    # for e.g., lasso-wavelet, dcgan
+    # each estimator in estimators takes as input 
+    # measurement matrix A, batch measurements and returns reconstructions
     estimators = utils.get_estimators(hparams)
     utils.setup_checkpointing(hparams)
     measurement_losses, l2_losses = utils.load_checkpoints(hparams)
@@ -50,9 +54,9 @@ def main(hparams):
             y_batch = np.matmul(x_batch, A) + noise_batch
 
         # Construct estimates using each estimator
-        for model_type in hparams.model_types:
-            estimator = estimators[model_type]
-            x_hat_batch = estimator(A, y_batch, hparams)
+        for model_type in hparams.model_types: # for each model in the models you're looking at
+            estimator = estimators[model_type] # get the estimator function for that model from disctionary estimators
+            x_hat_batch = estimator(A, y_batch, hparams) # reconstruct
 
             for i, key in enumerate(x_batch_dict.keys()):
                 x = xs_dict[key]

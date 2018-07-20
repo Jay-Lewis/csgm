@@ -7,7 +7,7 @@ import numpy as np
 
 def generate_basis():
     """generate the basis"""
-    x = np.zeros((64, 64))
+    x = np.zeros((128, 128))
     coefs = pywt.wavedec2(x, 'db1')
     n_levels = len(coefs)
     basis = []
